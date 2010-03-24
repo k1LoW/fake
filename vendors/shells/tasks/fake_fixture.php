@@ -23,7 +23,7 @@ class FakeFixtureTask extends Shell{
 
     function __interactive() {
         $this->hr();
-        $this->out(sprintf("Bake Model\nPath: %s", $this->path));
+        $this->out(sprintf("Fake Model\nPath: %s", $this->path));
         $this->hr();
         $this->interactive = true;
 
@@ -134,15 +134,50 @@ class FakeFixtureTask extends Shell{
         $out .= "\tvar \$name = '$model';\n";
         $out .= "\tvar \$import = array('table' => '{$useTable}', 'records' => true, 'connection' => '{$this->useDbConfig}');\n";
 
-        //$tempModel = new Model(array('table' => $model, 'ds' => $this->useDbConfig));
         $tempModel = ClassRegistry::init($model);
         $tempModel->recursive = -1;
         $count = $tempModel->find('count');
-        var_dump($count);
-        exit();
 
-        //$records = implode(",\n", $records);
-        //$out .= "\tvar \$records = array(array(\n$records\n\t));\n";
+        $response = '';
+        $example = 'Q';
+        while ($response == '') {
+            $response = $this->in($count . " record exists. Set limit number?"
+                                  . "\nLimit number or [A]ll"
+                                  . "\n[Q]uit", null, $example);
+            if (strtoupper($response) === 'Q') {
+                $this->out('Fake Aborted');
+                $this->_stop();
+            }
+        }
+
+        if (!is_numeric($response) && strtoupper($response) !== 'A') {
+            $this->out(__('You have made an invalid selection. Please choose a command to execute by entering A or Q or number.', true));
+            $this->execute();
+        }
+
+        if (is_numeric($response) && $response > $count) {
+            $this->out(__('The number that you selected is more than the number of records. Please try again.', true));
+            $this->execute();
+        }
+
+        $query = array();
+
+        if (is_numeric($response)) {
+            $query['limit'] = $response;
+        }
+
+        $results = $tempModel->find('all', $query);
+
+        $records = array();
+        foreach ($results as $result) {
+            foreach ($result[$model] as $field => $value) {
+                $record[] = "\t\t'$field' => '$value'";
+            }
+            $records[] = "array(\n" . implode(",\n", $record) . ")";
+        }
+
+        $records = implode(",\n", $records);
+        $out .= "\tvar \$records = array(\n$records\n\t);\n";
         $out .= "}\n";
 
 
@@ -153,7 +188,7 @@ class FakeFixtureTask extends Shell{
         }
         $filename = Inflector::underscore($model) . '_fixture.php';
         $header = '$Id';
-        $content = "<?php \n/* SVN FILE: $header$ */\n/* " . $model . " Fixture generated on: " . date('Y-m-d H:i:s') . " : " . time() . "*/\n{$out}?>";
+$content = "<?php \n/* SVN FILE: $header$ */\n/* " . $model . " Fixture generated on: " . date('Y-m-d H:i:s') . " : " . time() . "*/\n{$out}?>";
         $this->out("\nBaking test fixture for $model...");
         if ($this->createFile($path . $filename, $content)) {
             return str_replace("\t\t", "\t\t\t", $records);

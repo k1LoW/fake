@@ -8,7 +8,7 @@
    * FakeFixtureTask code license:
    *
    * @copyright   Copyright (C) 2010 by 101000code/101000LAB
-   * @since       CakePHP(tm) v 1.2
+   * @since       CakePHP(tm) v 1.3
    * @license         http://www.opensource.org/licenses/mit-license.php The MIT License
    */
   /**
@@ -64,6 +64,7 @@ class FakeFixtureTask extends Shell{
         $this->out(sprintf("Fake Model\nPath: %s", $this->path));
         $this->hr();
         $this->interactive = true;
+        $this->Model->interactive= true;
 
         $useTable = null;
         $primaryKey = 'id';
@@ -86,8 +87,7 @@ class FakeFixtureTask extends Shell{
         $useTable = Inflector::tableize($currentModelName);
         $fullTableName = $db->fullTableName($useTable, false);
         $tableIsGood = false;
-
-        if (array_search($useTable, $this->Model->__tables) === false) {
+        if (array_search($useTable, $this->Model->_tables) === false) {
             $this->out('');
             $this->out(sprintf(__("Given your model named '%s', Cake would expect a database table named %s", true), $currentModelName, $fullTableName));
             $tableIsGood = $this->in(__('Do you want to use this table?', true), array('y','n'), 'y');
@@ -98,7 +98,7 @@ class FakeFixtureTask extends Shell{
         }
 
         while ($tableIsGood == false && strtolower($useTable) != 'null') {
-            if (is_array($this->Model->__tables) && !in_array($useTable, $this->Model->__tables)) {
+            if (is_array($this->Model->_tables) && !in_array($useTable, $this->Model->_tables)) {
                 $fullTableName = $db->fullTableName($useTable, false);
                 $this->out($fullTableName . ' does not exist.');
                 $useTable = $this->in(__('What is the name of the table (enter "null" to use NO table)?', true));
@@ -108,7 +108,7 @@ class FakeFixtureTask extends Shell{
             }
         }
 
-        if (in_array($useTable, $this->Model->__tables)) {
+        if (in_array($useTable, $this->Model->_tables)) {
             App::import('Model');
             $tempModel = new Model(array('name' => $currentModelName, 'table' => $useTable, 'ds' => $useDbConfig));
 
@@ -153,7 +153,7 @@ class FakeFixtureTask extends Shell{
 
     function fixture($model, $useTable = null) {
         if (!class_exists('CakeSchema')) {
-            App::import('Model', 'Schema');
+            App::import('Model', 'CakeSchema');
         }
         $out = "\nclass {$model}Fixture extends CakeTestFixture {\n";
 

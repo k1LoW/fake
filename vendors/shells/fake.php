@@ -1,5 +1,44 @@
 <?php
-
+  /**
+   * Fake: Fixture generator plugin for cAKEphp.
+   *
+   * FakeShell code used BakeShell code as reference.
+   */
+  /**
+   * FakeShell code license:
+   *
+   * @copyright   Copyright (C) 2010 by 101000code/101000LAB
+   * @since       CakePHP(tm) v 1.2
+   * @license         http://www.opensource.org/licenses/mit-license.php The MIT License
+   */
+  /**
+   * BakeShell code license:
+   *
+   * Command-line code generation utility to automate programmer chores.
+   *
+   * Bake is CakePHP's code generation script, which can help you kickstart
+   * application development by writing fully functional skeleton controllers,
+   * models, and views. Going further, Bake can also write Unit Tests for you.
+   *
+   * PHP versions 4 and 5
+   *
+   * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
+   * Copyright 2005-2010, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+   *
+   * Licensed under The MIT License
+   * Redistributions of files must retain the above copyright notice.
+   *
+   * @filesource
+   * @copyright	  Copyright 2005-2010, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+   * @link		  http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+   * @package		  cake
+   * @subpackage	  cake.cake.console.libs
+   * @since		  CakePHP(tm) v 1.2.0.5012
+   * @version		  $Revision$
+   * @modifiedby	  $LastChangedBy$
+   * @lastmodified  $Date$
+   * @license		  http://www.opensource.org/licenses/mit-license.php The MIT License
+   */
 class FakeShell extends Shell {
 
     var $tasks = array('DbConfig', 'FakeFixture');
@@ -23,14 +62,14 @@ class FakeShell extends Shell {
 
         $choice = strtoupper($this->in(__('Would you like to Fake?', true), array('F', 'Q')));
         switch ($choice) {
-            case 'F':
-                $this->FakeFixture->execute();
-                break;
-            case 'Q':
-                exit(0);
-                break;
-            default:
-                $this->out(__('You have made an invalid selection. Please choose a command to execute by entering F or Q.', true));
+        case 'F':
+            $this->FakeFixture->execute();
+            break;
+        case 'Q':
+            exit(0);
+            break;
+        default:
+            $this->out(__('You have made an invalid selection. Please choose a command to execute by entering F or Q.', true));
         }
         $this->hr();
         $this->main();
@@ -43,5 +82,5 @@ class FakeShell extends Shell {
     function help() {
 
     }
-}
+  }
 ?>

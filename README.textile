@@ -1,0 +1,7 @@
+h1. Fake: Fixture generator plugin for cAKEphp.
+
+This Plugin generate fixture using datadase data.
+
+h2. Features
+
+* Generate fixture using database data.

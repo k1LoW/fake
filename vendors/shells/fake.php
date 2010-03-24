@@ -29,15 +29,15 @@
    * Redistributions of files must retain the above copyright notice.
    *
    * @filesource
-   * @copyright	  Copyright 2005-2010, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
-   * @link		  http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
-   * @package		  cake
-   * @subpackage	  cake.cake.console.libs
-   * @since		  CakePHP(tm) v 1.2.0.5012
-   * @version		  $Revision$
-   * @modifiedby	  $LastChangedBy$
+   * @copyright   Copyright 2005-2010, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+   * @link        http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+   * @package         cake
+   * @subpackage      cake.cake.console.libs
+   * @since       CakePHP(tm) v 1.2.0.5012
+   * @version         $Revision$
+   * @modifiedby      $LastChangedBy$
    * @lastmodified  $Date$
-   * @license		  http://www.opensource.org/licenses/mit-license.php The MIT License
+   * @license         http://www.opensource.org/licenses/mit-license.php The MIT License
    */
 class FakeShell extends Shell {
 
@@ -80,7 +80,15 @@ class FakeShell extends Shell {
     }
 
     function help() {
-
+        $this->out('Fake');
+        $this->hr();
+        $this->out('Fixture generator plugin for cAKEphp.');
+        $this->hr();
+        $this->out("Usage: cake fake <command>");
+        $this->hr();
+        $this->out('Commands:');
+        //$this->out("\n\tfake all\n\t\tgenerate all model fixture.");
+        $this->out("");
     }
   }
 ?>

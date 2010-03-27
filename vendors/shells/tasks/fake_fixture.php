@@ -179,10 +179,11 @@ class FakeFixtureTask extends Shell{
      * __all
      * description
      *
-     * @param 
+     * @param
      * @return
      */
     function __all(){
+
         $useTable = null;
         $primaryKey = 'id';
 
@@ -194,6 +195,7 @@ class FakeFixtureTask extends Shell{
         }
 
         $connections = array_keys($configs);
+
         if (count($connections) > 1) {
             $useDbConfig = $this->in(__('Use Database Config', true) .':', $connections, 'default');
         }
@@ -209,22 +211,7 @@ class FakeFixtureTask extends Shell{
     }
 
     function getModelList($useDbConfig){
-        $db =& ConnectionManager::getDataSource($useDbConfig);
-        $usePrefix = empty($db->config['prefix']) ? '' : $db->config['prefix'];
-        if ($usePrefix) {
-            $tables = array();
-            foreach ($db->listSources() as $table) {
-                if (!strncmp($table, $usePrefix, strlen($usePrefix))) {
-                    $tables[] = substr($table, strlen($usePrefix));
-                }
-            }
-        } else {
-            $tables = $db->listSources();
-        }
-        if (empty($tables)) {
-            $this->err(__('Your database does not have any tables.', true));
-            $this->_stop();
-        }
+        $tables = $this->Model->getAllTables($useDbConfig);
 
         $modelNames = array();
         $count = count($tables);

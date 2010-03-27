@@ -76,7 +76,19 @@ class FakeShell extends Shell {
     }
 
     function all() {
-            $this->FakeFixture->executeAll();
+        if (!is_dir($this->DbConfig->path)) {
+            if ($this->Project->execute()) {
+                $this->DbConfig->path = $this->params['working'] . DS . 'config' . DS;
+            }
+        }
+
+        if (!config('database')) {
+            $this->out(__("Your database configuration was not found. Take a moment to create one.", true));
+            $this->args = null;
+            return $this->DbConfig->execute();
+        }
+
+        $this->FakeFixture->executeAll();
     }
 
     function help() {

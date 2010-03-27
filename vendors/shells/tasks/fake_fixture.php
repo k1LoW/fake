@@ -51,6 +51,7 @@ class FakeFixtureTask extends Shell{
         if (!empty($this->args[0])) {
             $model = Inflector::camelize($this->args[0]);
             $this->useDbConfig = 'default';
+
             if ($this->fixture($model)) {
 
             }
@@ -149,6 +150,91 @@ class FakeFixtureTask extends Shell{
         }
     }
 
+    /**
+     * executeAll
+     * description
+     *
+     * @param $arg
+     * @return
+     */
+    function executeAll(){
+        if (empty($this->args)) {
+            $this->__all();
+        }
+
+        if (!empty($this->args[0])) {
+            $this->useDbConfig = $this->args[0];
+
+            $currentModelList = $this->getModelList($this->useDbConfig);
+
+            foreach ($currentModelList as $model) {
+                if ($this->fixture($model)) {
+
+                }
+            }
+        }
+    }
+
+    /**
+     * __all
+     * description
+     *
+     * @param 
+     * @return
+     */
+    function __all(){
+        $useTable = null;
+        $primaryKey = 'id';
+
+        $useDbConfig = 'default';
+        $configs = get_class_vars('DATABASE_CONFIG');
+
+        if (!is_array($configs)) {
+            return $this->DbConfig->execute();
+        }
+
+        $connections = array_keys($configs);
+        if (count($connections) > 1) {
+            $useDbConfig = $this->in(__('Use Database Config', true) .':', $connections, 'default');
+        }
+        $this->useDbConfig = $useDbConfig;
+
+        $currentModelList = $this->getModelList($this->useDbConfig);
+
+        foreach ($currentModelList as $model) {
+            if ($this->fixture($model)) {
+
+            }
+        }
+    }
+
+    function getModelList($useDbConfig){
+        $db =& ConnectionManager::getDataSource($useDbConfig);
+        $usePrefix = empty($db->config['prefix']) ? '' : $db->config['prefix'];
+        if ($usePrefix) {
+            $tables = array();
+            foreach ($db->listSources() as $table) {
+                if (!strncmp($table, $usePrefix, strlen($usePrefix))) {
+                    $tables[] = substr($table, strlen($usePrefix));
+                }
+            }
+        } else {
+            $tables = $db->listSources();
+        }
+        if (empty($tables)) {
+            $this->err(__('Your database does not have any tables.', true));
+            $this->_stop();
+        }
+
+        $modelNames = array();
+        $count = count($tables);
+        for ($i = 0; $i < $count; $i++) {
+            $modelNames[] = $this->Model->_modelName($tables[$i]);
+        }
+
+        return $modelNames;
+    }
+
     function fixture($model, $useTable = null) {
         if (!class_exists('CakeSchema')) {
             App::import('Model', 'CakeSchema');
@@ -177,12 +263,13 @@ class FakeFixtureTask extends Shell{
         $response = '';
         $example = 'Q';
         while ($response == '') {
-            $response = $this->in($count . " record exists. Set limit number?"
+            $this->out('');
+            $response = $this->in("'{$model}' has " .$count . " records. Set limit number?"
                                   . "\nLimit number or [A]ll"
                                   . "\n[Q]uit", null, $example);
             if (strtoupper($response) === 'Q') {
                 $this->out('Fake Aborted');
-                $this->_stop();
+                return false;
             }
         }
 

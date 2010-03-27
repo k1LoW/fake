@@ -87,7 +87,7 @@ class FakeShell extends Shell {
         $this->out("Usage: cake fake <command>");
         $this->hr();
         $this->out('Commands:');
-        //$this->out("\n\tfake all\n\t\tgenerate all model fixture.");
+        $this->out("\n\tfake all\n\t\tgenerate all model fixture.");
         $this->out("");
     }
   }

@@ -41,7 +41,7 @@
    */
 class FakeShell extends Shell {
 
-    var $tasks = array('DbConfig', 'FakeFixture');
+    var $tasks = array('DbConfig', 'Project', 'FakeFixture');
 
     function main() {
         if (!is_dir($this->DbConfig->path)) {
@@ -76,7 +76,7 @@ class FakeShell extends Shell {
     }
 
     function all() {
-
+            $this->FakeFixture->executeAll();
     }
 
     function help() {

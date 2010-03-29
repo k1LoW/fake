@@ -9,3 +9,11 @@ h2. Features
 h2. Usage
 
 @cake fake@
+@cake fake all@
+
+h2. When you use CakePHP 1.3
+
+@cake bake fixture@
+
+see "CookBook":http://book.cakephp.org/view/1611/Bake-improvements-in-1-3 .
+

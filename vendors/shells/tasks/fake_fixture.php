@@ -293,6 +293,7 @@ class FakeFixtureTask extends Shell{
 
         $records = array();
         foreach ($results as $result) {
+            $record = array();
             foreach ($result[$model] as $field => $value) {
                 $record[] = "\t\t'$field' => '$value'";
             }
